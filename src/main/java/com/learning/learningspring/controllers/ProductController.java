@@ -1,22 +1,31 @@
 package com.learning.learningspring.controllers;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.Errors;
+import org.springframework.validation.ObjectError;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.databind.ser.std.StdKeySerializers.Dynamic;
+import com.learning.learningspring.helpers.ResponseHelper;
 import com.learning.learningspring.models.entities.Product;
 import com.learning.learningspring.services.ProductService;
+
+import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/products")
@@ -26,39 +35,50 @@ public class ProductController {
     private ProductService productService;
 
     @PostMapping
-    public Product createProduct(@RequestBody Product product) {
+    public ResponseEntity<Object> createProduct(@Validated @RequestBody Product product, Errors errors) {
+        if (errors.hasErrors()) {
+            List<String> listError = new ArrayList<>();
+            for (ObjectError error : errors.getAllErrors()) {
+                listError.add(error.getDefaultMessage());
+            }
+
+            return ResponseHelper.build(HttpStatus.BAD_REQUEST, "validasi error", listError);
+        }
         return productService.createProduct(product);
     }
 
     @PutMapping
-    public Product updateProduct(@RequestBody Product product) {
+    public ResponseEntity<Object> updateProduct(@Validated @RequestBody Product product, Errors errors) {
+        if (errors.hasErrors()) {
+            List<String> listError = new ArrayList<>();
+            for (ObjectError error : errors.getAllErrors()) {
+                listError.add(error.getDefaultMessage());
+            }
+
+            return ResponseHelper.build(HttpStatus.BAD_REQUEST, "validasi error", listError);
+        }
         return productService.createProduct(product);
     }
 
     @PostMapping("/search")
-    public List<Product> searchProduct(@RequestBody Map<String, Object> body) {
+    public ResponseEntity<Object> searchProduct(@RequestBody Map<String, Object> body) {
         System.out.println(body);
         String name = (String) body.get("name");
         return productService.findByNameProduct(name);
     }
 
     @GetMapping("/{id}")
-    public Product getProductById(@PathVariable("id") Long id) {
+    public ResponseEntity<Object> getProductById(@PathVariable("id") Long id) {
         return productService.findOne(id);
     }
 
     @GetMapping
-    public Iterable<Product> findAll() {
+    public ResponseEntity<Object> findAll() {
         return productService.findAll();
     }
 
     @DeleteMapping("/{id}")
-    public String deleteOne(@PathVariable("id") Long id) {
-        try {
-            productService.removeOne(id);
-            return "Product berhasil dihapus!";
-        } catch (Exception e) {
-            return "Product gagal dihapus!";
-        }
+    public ResponseEntity<Object> deleteOne(@PathVariable("id") Long id) {
+        return productService.removeOne(id);
     }
 }
