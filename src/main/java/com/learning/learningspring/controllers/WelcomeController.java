@@ -11,12 +11,7 @@ public class WelcomeController {
 
     @GetMapping
     public String welcome() {
-        return "Welcome to Spring";
-    }
-
-    @PostMapping
-    public String other() {
-        return "Welcome to Spring";
+        return "Welcome to Spring gaes";
     }
 
 }
