@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.learning.learningspring.helpers.ResponseHelper;
 import com.learning.learningspring.models.entities.Product;
+import com.learning.learningspring.models.entities.Supplier;
 import com.learning.learningspring.models.repos.ProductRepo;
 
 import jakarta.transaction.Transactional;
@@ -71,5 +72,15 @@ public class ProductService {
         } catch (Exception e) {
             return ResponseHelper.build(HttpStatus.INTERNAL_SERVER_ERROR, "Error", null);
         }
+    }
+
+    public ResponseEntity<Object> addSupplier(Supplier supplier, Long id) {
+        Optional<Product> product = productRepo.findById(id);
+        if (product.isPresent()) {
+            product.get().getSuppliers().add(supplier);
+            productRepo.save(product.get());
+            return ResponseHelper.build(HttpStatus.OK, "Success", null);
+        }
+        return ResponseHelper.build(HttpStatus.INTERNAL_SERVER_ERROR, "Error", null);
     }
 }

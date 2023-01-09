@@ -11,7 +11,6 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.ObjectError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,10 +21,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.learning.learningspring.helpers.ResponseHelper;
 import com.learning.learningspring.models.entities.Product;
+import com.learning.learningspring.models.entities.Supplier;
 import com.learning.learningspring.services.ProductService;
-
-import jakarta.validation.ConstraintViolationException;
-import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/products")
@@ -80,5 +77,10 @@ public class ProductController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> deleteOne(@PathVariable("id") Long id) {
         return productService.removeOne(id);
+    }
+
+    @PostMapping("/{id}")
+    public ResponseEntity<Object> addSupplier(@RequestBody Supplier body, @PathVariable("id") Long productId) {
+        return productService.addSupplier(body, productId);
     }
 }
