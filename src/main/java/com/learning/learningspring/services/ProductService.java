@@ -1,5 +1,6 @@
 package com.learning.learningspring.services;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -12,6 +13,7 @@ import com.learning.learningspring.helpers.ResponseHelper;
 import com.learning.learningspring.models.entities.Product;
 import com.learning.learningspring.models.entities.Supplier;
 import com.learning.learningspring.models.repos.ProductRepo;
+import com.learning.learningspring.models.repos.SupplierRepo;
 
 import jakarta.transaction.Transactional;
 
@@ -21,6 +23,9 @@ public class ProductService {
 
     @Autowired
     private ProductRepo productRepo;
+
+    @Autowired
+    private SupplierRepo supplierRepo;
 
     public ResponseEntity<Object> createProduct(Product product) {
         try {
@@ -82,5 +87,47 @@ public class ProductService {
             return ResponseHelper.build(HttpStatus.OK, "Success", null);
         }
         return ResponseHelper.build(HttpStatus.INTERNAL_SERVER_ERROR, "Error", null);
+    }
+
+    public ResponseEntity<Object> findProductByName(String name) {
+        try {
+            Product product = productRepo.findProductByName(name);
+            return ResponseHelper.build(HttpStatus.OK, "Success", product);
+        } catch (Exception e) {
+            return ResponseHelper.build(HttpStatus.INTERNAL_SERVER_ERROR, "Error", null);
+        }
+    }
+
+    public ResponseEntity<Object> findProductByNameLike(String name) {
+        try {
+            List<Product> product = productRepo.findByNameLike("%" + name + "%");
+            return ResponseHelper.build(HttpStatus.OK, "Success", product);
+        } catch (Exception e) {
+            return ResponseHelper.build(HttpStatus.INTERNAL_SERVER_ERROR, "Error", null);
+        }
+    }
+
+    public ResponseEntity<Object> findByCategory(Long categoryId) {
+        try {
+            List<Product> products = productRepo.findByCategoryId(categoryId);
+            return ResponseHelper.build(HttpStatus.OK, "Success", products);
+        } catch (Exception e) {
+            return ResponseHelper.build(HttpStatus.INTERNAL_SERVER_ERROR, "Error", null);
+        }
+    }
+
+    public ResponseEntity<Object> findBySupplier(Long supplierID) {
+        try {
+            Optional<Supplier> supplier = supplierRepo.findById(supplierID);
+            if (supplier.isPresent()) {
+                List<Product> products = productRepo.findBySupplierId(supplier.get());
+                return ResponseHelper.build(HttpStatus.OK, "Success", products);
+            }
+            return ResponseHelper.build(HttpStatus.NOT_FOUND, "Data tidak ada!", null);
+
+        } catch (Exception e) {
+            System.out.println(e);
+            return ResponseHelper.build(HttpStatus.INTERNAL_SERVER_ERROR, "Error", null);
+        }
     }
 }

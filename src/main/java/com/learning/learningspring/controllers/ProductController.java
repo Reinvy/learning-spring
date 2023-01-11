@@ -17,8 +17,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.learning.learningspring.dto.SearchDTO;
 import com.learning.learningspring.helpers.ResponseHelper;
 import com.learning.learningspring.models.entities.Product;
 import com.learning.learningspring.models.entities.Supplier;
@@ -82,5 +84,29 @@ public class ProductController {
     @PostMapping("/{id}")
     public ResponseEntity<Object> addSupplier(@RequestBody Supplier body, @PathVariable("id") Long productId) {
         return productService.addSupplier(body, productId);
+    }
+
+    @PostMapping("/search/name")
+    public ResponseEntity<Object> getProductByName(@RequestBody SearchDTO bodyDto) {
+        System.out.println(bodyDto.getSearchKey());
+        return productService.findProductByName(bodyDto.getSearchKey());
+    }
+
+    @PostMapping("/search/like")
+    public ResponseEntity<Object> getProductByNameLike(@RequestBody SearchDTO bodyDto) {
+        System.out.println(bodyDto.getSearchKey());
+        return productService.findProductByNameLike(bodyDto.getSearchKey());
+    }
+
+    @GetMapping("/category/{id}")
+    public ResponseEntity<Object> getProductByCategoryId(@PathVariable("id") Long id) {
+        System.out.println(id);
+        return productService.findByCategory(id);
+    }
+
+    @GetMapping("/supplier/{id}")
+    public ResponseEntity<Object> getProductBySuplierId(@PathVariable("id") Long id) {
+        System.out.println(id);
+        return productService.findBySupplier(id);
     }
 }

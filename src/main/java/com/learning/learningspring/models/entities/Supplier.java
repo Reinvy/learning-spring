@@ -25,7 +25,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @Entity
 @Table(name = "tbl_supplier")
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+// @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
+// property = "id")
 public class Supplier implements Serializable {
 
     @Id
@@ -42,6 +43,6 @@ public class Supplier implements Serializable {
     private String email;
 
     @ManyToMany(mappedBy = "suppliers")
-    // @JsonBackReference
+    @JsonBackReference
     private List<Product> products;
 }

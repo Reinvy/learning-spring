@@ -29,7 +29,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @Entity
 @Table(name = "tbl_product")
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+// @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
+// property = "id")
 public class Product implements Serializable {
 
     @Id
@@ -52,7 +53,7 @@ public class Product implements Serializable {
 
     @ManyToMany
     @JoinTable(name = "tbl_product_supplier", joinColumns = @JoinColumn(name = "product_id"), inverseJoinColumns = @JoinColumn(name = "supplier_id"))
-    // @JsonManagedReference
+    @JsonManagedReference
     private List<Supplier> suppliers;
 
 }
