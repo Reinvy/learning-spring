@@ -61,4 +61,9 @@ public class SupplierService {
         }
     }
 
+    public Supplier findByEmail(String email) {
+        Supplier supplier = supplierRepo.findSupplierByEmail(email);
+        return supplier;
+    }
+
 }

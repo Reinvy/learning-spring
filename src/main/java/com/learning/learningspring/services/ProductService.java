@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -127,6 +128,21 @@ public class ProductService {
 
         } catch (Exception e) {
             System.out.println(e);
+            return ResponseHelper.build(HttpStatus.INTERNAL_SERVER_ERROR, "Error", null);
+        }
+    }
+
+    public ResponseEntity<Object> getByNameAndDesc(String name, String desc) {
+        try {
+            System.out.println(name);
+            System.out.println(desc);
+            List<Product> products = productRepo.findProductByNameContainsAndDescriptionContains(name, desc);
+            System.out.println(products.size());
+            if (products.isEmpty()) {
+                return ResponseHelper.build(HttpStatus.NOT_FOUND, "Data tidak ada!", products);
+            }
+            return ResponseHelper.build(HttpStatus.OK, "Success", products);
+        } catch (Exception e) {
             return ResponseHelper.build(HttpStatus.INTERNAL_SERVER_ERROR, "Error", null);
         }
     }

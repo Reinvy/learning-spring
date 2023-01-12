@@ -2,6 +2,7 @@ package com.learning.learningspring.controllers;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,6 +13,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.databind.ser.std.StdKeySerializers.Dynamic;
 import com.learning.learningspring.dto.SupplierDTO;
 import com.learning.learningspring.helpers.ResponseHelper;
 import com.learning.learningspring.models.entities.Supplier;
@@ -78,6 +80,23 @@ public class SupplierController {
                 .build();
 
         return supplierService.createSupplier(supplier);
+    }
+
+    @PostMapping("/email")
+    public ResponseEntity<Object> findByEmail(@RequestBody Map<String, Object> body) {
+        try {
+            String email = (String) body.get("email");
+            System.out.println(email);
+            Supplier supplier = supplierService.findByEmail(email);
+            if (supplier != null) {
+                return ResponseHelper.build(HttpStatus.OK, "Success", supplier);
+            }
+            return ResponseHelper.build(HttpStatus.NOT_FOUND, "Data Tidak Ditemukan!", supplier);
+        } catch (Exception e) {
+            return ResponseHelper.build(HttpStatus.INTERNAL_SERVER_ERROR, "Error", null);
+
+        }
+
     }
 
 }

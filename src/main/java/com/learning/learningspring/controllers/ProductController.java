@@ -66,6 +66,17 @@ public class ProductController {
         return productService.findByNameProduct(name);
     }
 
+    @PostMapping("/searchby")
+    public ResponseEntity<Object> searchProductby(@RequestBody Map<String, Object> body) {
+        System.out.println(body);
+        String name = (String) body.get("name");
+        String desc = (String) body.get("desc");
+
+        System.out.println(name);
+        System.out.println(desc);
+        return productService.getByNameAndDesc(name, desc);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<Object> getProductById(@PathVariable("id") Long id) {
         return productService.findOne(id);

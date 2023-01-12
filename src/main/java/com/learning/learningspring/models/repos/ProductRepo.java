@@ -24,4 +24,6 @@ public interface ProductRepo extends JpaRepository<Product, Long> {
 
     @Query("SELECT p FROM Product p WHERE :supplier MEMBER OF p.suppliers")
     public List<Product> findBySupplierId(@PathParam("supplier") Supplier supplier);
+
+    public List<Product> findProductByNameContainsAndDescriptionContains(String name, String description);
 }
